@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        releaseConfig {
+            storeFile file("keystore/nanodegree.jks");
+            storePassword("nan0dEgree");
+            keyAlias "release";
+            keyPassword "nan0dEgree";
+        }
+
+        debugConfig {
+            storeFile file("keystore/nanodegree.jks");
+            storePassword("nan0dEgree");
+            keyAlias "debug";
+            keyPassword "nan0dEgree";
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "in.ashwanik.popularmovie1"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+        debug {
+            debuggable true
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debugConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    packagingOptions {
+        exclude 'AndroidManifest.xml'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/ReadMe.md'
+        exclude '.readme'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile('com.android.support:recyclerview-v7:+') {
+        exclude module: 'support-v4'
+    }
+    compile('com.android.support:cardview-v7:+') {
+        exclude module: 'support-v4'
+    }
+    compile ('com.android.support:design:23.1.1')
+            {
+                exclude module: 'support-v4'
+            }
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'in.ashwanik:retro-client:0.1.1'
+    compile 'com.github.clans:fab:1.6.2'
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+}
