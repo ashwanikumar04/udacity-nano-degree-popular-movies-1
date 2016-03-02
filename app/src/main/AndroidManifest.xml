@@ -28,6 +28,8 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <meta-data android:name="in.ashwanik.popularmovie1.CustomGlideModule"
+            android:value="GlideModule"/>
     </application>
 
 </manifest>

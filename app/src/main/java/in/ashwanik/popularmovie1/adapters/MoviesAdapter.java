@@ -47,7 +47,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ItemViewHo
         Movie movie = arrayList.get(position);
         holder.moviePoster.setImageResource(R.drawable.placeholder);
         if (!TextUtils.isEmpty(movie.getFullPosterPath())) {
-            Glide.with(BaseApplication.getInstance()).load(movie.getFullPosterPath()).placeholder(R.drawable.placeholder).into(holder.moviePoster);
+            Glide
+                    .with(BaseApplication.getInstance())
+                    .load(movie.getFullPosterPath())
+                    .placeholder(R.drawable.placeholder)
+                    .into(holder.moviePoster);
         }
         holder.moviePoster.setContentDescription(movie.getTitle());
         if (Build.VERSION.SDK_INT >= 21) {
