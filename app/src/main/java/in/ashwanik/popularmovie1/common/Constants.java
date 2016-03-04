@@ -5,5 +5,5 @@ package in.ashwanik.popularmovie1.common;
  */
 public class Constants {
 
-    public static String API_KEY = "<API_KEY";
+    public static String API_KEY = "<API_KEY>";
 }

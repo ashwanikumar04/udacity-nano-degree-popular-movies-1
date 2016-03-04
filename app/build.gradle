@@ -85,5 +85,5 @@ dependencies {
     compile 'in.ashwanik:retro-client:0.1.1'
     compile 'com.github.clans:fab:1.6.2'
     compile 'org.greenrobot:eventbus:3.0.0'
-
+    compile 'com.joanzapata.iconify:android-iconify-material:2.2.1'
 }

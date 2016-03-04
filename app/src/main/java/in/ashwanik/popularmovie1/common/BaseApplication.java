@@ -3,6 +3,9 @@ package in.ashwanik.popularmovie1.common;
 import android.app.Application;
 import android.os.Build;
 
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.MaterialModule;
+
 import in.ashwanik.popularmovie1.R;
 import in.ashwanik.popularmovie1.web.ApiUrls;
 import in.ashwanik.retroclient.RetroClientServiceInitializer;
@@ -29,6 +32,8 @@ public class BaseApplication extends Application {
         } else {
             progressViewColor = getResources().getColor(R.color.accent);
         }
+        Iconify
+                .with(new MaterialModule());
         RetroClientServiceInitializer.getInstance().initialize(ApiUrls.BASE_API_URL, getApplicationContext(), progressViewColor, true);
         RetroClientServiceInitializer.getInstance().setLogCategoryName("Popular_Movies");
     }

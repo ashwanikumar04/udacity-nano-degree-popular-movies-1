@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,8 +34,15 @@ public class MainActivity extends BaseActivity {
     private void initializeFloatingActionButtons() {
 
         FloatingActionButton sortByPopular = ButterKnife.findById(floatingActionMenu, R.id.sortByPopular);
+        sortByPopular
+                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_favorite_border)
+                        .colorRes(R.color.white)
+                        .actionBarSize());
         FloatingActionButton sortByHighestRated = ButterKnife.findById(floatingActionMenu, R.id.sortByHighestRated);
-
+        sortByHighestRated
+                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_star_border)
+                        .colorRes(R.color.white)
+                        .actionBarSize());
         sortByPopular.setOnClickListener(onClickListener);
         sortByHighestRated.setOnClickListener(onClickListener);
 
