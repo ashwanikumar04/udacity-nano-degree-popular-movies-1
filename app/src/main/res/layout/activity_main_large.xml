@@ -8,8 +8,6 @@
 
     <include layout="@layout/app_bar" />
 
-    <include layout="@layout/content_main" />
-
-    <include layout="@layout/floating_action_menu" />
+    <include layout="@layout/content_main_large" />
 
 </android.support.design.widget.CoordinatorLayout>

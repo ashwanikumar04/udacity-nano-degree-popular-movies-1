@@ -100,5 +100,12 @@
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/detailsView"
+        style="@style/featureHeading"
+        android:layout_centerVertical="true"
+        android:text="@string/detailsView"
+        android:textSize="@dimen/text_30" />
+
     <include layout="@layout/floating_action_details_menu" />
 </RelativeLayout>

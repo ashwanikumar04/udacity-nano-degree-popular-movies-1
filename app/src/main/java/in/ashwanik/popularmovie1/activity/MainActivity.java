@@ -1,74 +1,44 @@
 package in.ashwanik.popularmovie1.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
-
-import org.greenrobot.eventbus.EventBus;
+import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.ashwanik.popularmovie1.R;
-import in.ashwanik.popularmovie1.common.Constants;
-import in.ashwanik.popularmovie1.events.FloatingActionButtonClickEvent;
+import in.ashwanik.popularmovie1.fragment.DetailActivityFragment;
 
 public class MainActivity extends BaseActivity {
 
-    @Bind(R.id.sortMoviesMenu)
-    FloatingActionMenu floatingActionMenu;
+    @Bind(R.id.detailView)
+    @Nullable
+    FrameLayout detailView;
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            EventBus.getDefault().post(new FloatingActionButtonClickEvent((int) v.getTag()));
-            floatingActionMenu.close(true);
-        }
-    };
-
-
-    private void initializeFloatingActionButtons() {
-
-        FloatingActionButton sortByPopular = ButterKnife.findById(floatingActionMenu, R.id.sortByPopular);
-        sortByPopular
-                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_whatshot)
-                        .colorRes(R.color.white)
-                        .actionBarSize());
-        sortByPopular.setTag(Constants.SortType.SORT_BY_MOST_POPULAR);
-        FloatingActionButton sortByHighestRated = ButterKnife.findById(floatingActionMenu, R.id.sortByHighestRated);
-        sortByHighestRated
-                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_star)
-                        .colorRes(R.color.white)
-                        .actionBarSize());
-
-        sortByHighestRated.setTag(Constants.SortType.SORT_BY_HEIGHEST_RATED);
-
-        FloatingActionButton showFavorite = ButterKnife.findById(floatingActionMenu, R.id.showFavorite);
-        showFavorite
-                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_favorite)
-                        .colorRes(R.color.white)
-                        .actionBarSize());
-        showFavorite.setTag(Constants.SortType.SORT_BY_FAVORITE_MOVIES);
-
-        sortByPopular.setOnClickListener(onClickListener);
-        sortByHighestRated.setOnClickListener(onClickListener);
-        showFavorite.setOnClickListener(onClickListener);
-
+    public FrameLayout getDetailView() {
+        return detailView;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        int smallestScreenWidth = getResources().getConfiguration().smallestScreenWidthDp;
+        if (smallestScreenWidth >= 600) {
+            setContentView(R.layout.activity_main_large);
+        } else {
+            setContentView(R.layout.activity_main_small);
+        }
         ButterKnife.bind(this);
         setToolBar(false);
-        floatingActionMenu.setClosedOnTouchOutside(true);
-        initializeFloatingActionButtons();
+        if (detailView != null) {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detailView, new DetailActivityFragment(), "TAG_FRAGMENT")
+                        .commit();
+            }
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.joanzapata.iconify.fonts.MaterialIcons;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.ashwanik.popularmovie1.R;
 import in.ashwanik.popularmovie1.activity.DetailsActivity;
+import in.ashwanik.popularmovie1.activity.MainActivity;
 import in.ashwanik.popularmovie1.adapters.MoviesAdapter;
 import in.ashwanik.popularmovie1.common.BaseApplication;
 import in.ashwanik.popularmovie1.common.Constants;
@@ -33,6 +39,7 @@ import in.ashwanik.popularmovie1.events.FloatingActionButtonClickEvent;
 import in.ashwanik.popularmovie1.interfaces.IActionHandler;
 import in.ashwanik.popularmovie1.interfaces.IClickHandler;
 import in.ashwanik.popularmovie1.response.MovieResponse;
+import in.ashwanik.popularmovie1.utils.FontIconHelper;
 import in.ashwanik.popularmovie1.utils.Helpers;
 import in.ashwanik.popularmovie1.web.clients.MovieClient;
 import in.ashwanik.retroclient.entities.ErrorData;
@@ -57,6 +64,40 @@ public class MainActivityFragment extends BaseFragment {
 
     MoviesAdapter adapter;
     RetroClientServiceGenerator serviceGenerator;
+    @Bind(R.id.sortMoviesMenu)
+    FloatingActionMenu floatingActionMenu;
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            EventBus.getDefault().post(new FloatingActionButtonClickEvent((int) v.getTag()));
+            floatingActionMenu.close(true);
+        }
+    };
+
+
+    private void initializeFloatingActionButtons() {
+
+        FloatingActionButton sortByPopular = ButterKnife.findById(floatingActionMenu, R.id.sortByPopular);
+        sortByPopular
+                .setImageDrawable(FontIconHelper.getFontDrawable(BaseApplication.getInstance(), MaterialIcons.md_whatshot));
+        sortByPopular.setTag(Constants.SortType.SORT_BY_MOST_POPULAR);
+        FloatingActionButton sortByHighestRated = ButterKnife.findById(floatingActionMenu, R.id.sortByHighestRated);
+        sortByHighestRated
+                .setImageDrawable(FontIconHelper.getFontDrawable(BaseApplication.getInstance(), MaterialIcons.md_star));
+
+        sortByHighestRated.setTag(Constants.SortType.SORT_BY_HEIGHEST_RATED);
+
+        FloatingActionButton showFavorite = ButterKnife.findById(floatingActionMenu, R.id.showFavorite);
+        showFavorite
+                .setImageDrawable(FontIconHelper.getFontDrawable(BaseApplication.getInstance(), MaterialIcons.md_favorite));
+        showFavorite.setTag(Constants.SortType.SORT_BY_FAVORITE_MOVIES);
+
+        sortByPopular.setOnClickListener(onClickListener);
+        sortByHighestRated.setOnClickListener(onClickListener);
+        showFavorite.setOnClickListener(onClickListener);
+
+    }
 
     private void loadDataFromApi(int page, final IActionHandler<List<Movie>> actionHandler) {
         MovieClient movieClient = serviceGenerator.getService(MovieClient.class, "movieClient");
@@ -183,22 +224,31 @@ public class MainActivityFragment extends BaseFragment {
             @Override
             public void onItemClicked(View view, int position) {
                 Movie movie = movies.get(position);
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra("movieString", Json.serialize(movie));
-                if (Build.VERSION.SDK_INT >= 21) {
-                    View icon = ButterKnife.findById(view, R.id.iv_movie_poster);
-                    intent.putExtra("iconId", icon.getTransitionName());
-                    ActivityOptionsCompat options;
-                    options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            getActivity(),
-                            new Pair<>(icon,
-                                    icon.getTransitionName())
-                    );
-                    ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                if (((MainActivity) getActivity()).getDetailView() == null) {
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra("movieString", Json.serialize(movie));
+                    if (Build.VERSION.SDK_INT >= 21) {
+                        View icon = ButterKnife.findById(view, R.id.iv_movie_poster);
+                        intent.putExtra("iconId", icon.getTransitionName());
+                        ActivityOptionsCompat options;
+                        options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(),
+                                new Pair<>(icon,
+                                        icon.getTransitionName())
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
                 } else {
-                    startActivity(intent);
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    DetailActivityFragment detailActivityFragment = new DetailActivityFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("movieString", Json.serialize(movie));
+                    detailActivityFragment.setArguments(bundle);
+                    ft.replace(R.id.detailView, detailActivityFragment, "TAG_FRAGMENT");
+                    ft.commitAllowingStateLoss();
                 }
-
             }
 
             @Override
@@ -214,7 +264,8 @@ public class MainActivityFragment extends BaseFragment {
         adapter = new MoviesAdapter(this.getActivity(), movies, handler);
         sortBy = "";
         EventBus.getDefault().register(this);
-
+        floatingActionMenu.setClosedOnTouchOutside(true);
+        initializeFloatingActionButtons();
         int type = Helpers.getIntegerAsPreference(Constants.PREFS_NAME_MAIN, Constants.KEYS_SORT_TYPE, Constants.SortType.SORT_BY_MOST_POPULAR);
         EventBus.getDefault().post(new FloatingActionButtonClickEvent(type));
         return view;

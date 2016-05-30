@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +24,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,7 +33,6 @@ import in.ashwanik.popularmovie1.adapters.TrailersAdapter;
 import in.ashwanik.popularmovie1.common.BaseApplication;
 import in.ashwanik.popularmovie1.common.Constants;
 import in.ashwanik.popularmovie1.entities.Movie;
-import in.ashwanik.popularmovie1.events.FloatingActionButtonClickEvent;
 import in.ashwanik.popularmovie1.interfaces.IClickHandler;
 import in.ashwanik.popularmovie1.response.ReviewsAndTrailersResponse;
 import in.ashwanik.popularmovie1.utils.FontIconHelper;
@@ -58,7 +56,10 @@ public class DetailActivityFragment extends BaseFragment {
     FloatingActionButton floatingActionButtonFavorite;
     @Bind(R.id.detailOptions)
     FloatingActionMenu floatingActionMenu;
-
+    @Bind(R.id.detailsView)
+    TextView detailsView;
+    @Bind(R.id.content)
+    ScrollView content;
     RetroClientServiceGenerator serviceGenerator;
     ReviewsAndTrailersResponse reviewsAndTrailersResponse;
     IClickHandler handler;
@@ -213,29 +214,42 @@ public class DetailActivityFragment extends BaseFragment {
         serviceGenerator = new RetroClientServiceGenerator(DetailActivityFragment.this.getActivity(),
                 false);
 
-        int type = Helpers.getIntegerAsPreference(Constants.PREFS_NAME_MAIN, Constants.KEYS_SORT_TYPE, Constants.SortType.SORT_BY_MOST_POPULAR);
-        EventBus.getDefault().post(new FloatingActionButtonClickEvent(type));
         Bundle bundle = getActivity().getIntent().getExtras();
-        final String movieString = bundle.getString("movieString");
-        if (Build.VERSION.SDK_INT >= 21) {
-            iconId = bundle.getString("iconId");
+        if (bundle == null) {
+            bundle = getArguments();
         }
-        try {
-            movie = Json.deSerialize(movieString, Movie.class);
-            populateData();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        showFavoriteButton(MovieHelpers.isFavorite(movie) > MovieHelpers.INVALID_FAVORITE_INDEX);
-
-        floatingActionButtonFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFavoriteButton(MovieHelpers.updateFavorites(movie));
+        String movieString = "";
+        if (bundle != null) {
+            movieString = bundle.getString("movieString");
+            if (Build.VERSION.SDK_INT >= 21) {
+                iconId = bundle.getString("iconId");
             }
-        });
-        floatingActionMenu.setClosedOnTouchOutside(true);
-        initializeFloatingActionButtons();
+        }
+
+        detailsView.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(movieString)) {
+            try {
+                movie = Json.deSerialize(movieString, Movie.class);
+                populateData();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            showFavoriteButton(MovieHelpers.isFavorite(movie) > MovieHelpers.INVALID_FAVORITE_INDEX);
+
+            floatingActionButtonFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFavoriteButton(MovieHelpers.updateFavorites(movie));
+                }
+            });
+            floatingActionMenu.setClosedOnTouchOutside(true);
+            initializeFloatingActionButtons();
+        } else {
+            detailsView.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
+            floatingActionButtonFavorite.setVisibility(View.GONE);
+            floatingActionMenu.setVisibility(View.GONE);
+        }
         return view;
     }
 
