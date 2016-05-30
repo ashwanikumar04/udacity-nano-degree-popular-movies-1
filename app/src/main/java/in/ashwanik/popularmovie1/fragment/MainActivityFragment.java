@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +22,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.ashwanik.popularmovie1.R;
-import in.ashwanik.popularmovie1.activity.BaseActivity;
 import in.ashwanik.popularmovie1.activity.DetailsActivity;
 import in.ashwanik.popularmovie1.adapters.MoviesAdapter;
 import in.ashwanik.popularmovie1.common.BaseApplication;
@@ -45,7 +43,7 @@ import in.ashwanik.retroclient.utils.Json;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends BaseFragment {
 
     View view;
     @Bind(R.id.recyclerView)
@@ -59,14 +57,6 @@ public class MainActivityFragment extends Fragment {
 
     MoviesAdapter adapter;
     RetroClientServiceGenerator serviceGenerator;
-
-    private void showSnackBar(String message, View view) {
-        ((BaseActivity) getActivity()).showSnackBar(message, view);
-    }
-
-    private void showSnackBar(ErrorData errorData, View view) {
-        ((BaseActivity) getActivity()).showSnackBar(errorData, view);
-    }
 
     private void loadDataFromApi(int page, final IActionHandler<List<Movie>> actionHandler) {
         MovieClient movieClient = serviceGenerator.getService(MovieClient.class, "movieClient");
