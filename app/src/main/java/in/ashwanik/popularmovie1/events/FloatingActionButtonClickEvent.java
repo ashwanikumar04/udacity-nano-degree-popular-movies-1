@@ -5,13 +5,13 @@ package in.ashwanik.popularmovie1.events;
  */
 public class FloatingActionButtonClickEvent {
 
-    int clickedButtonId;
+    int sortType;
 
-    public FloatingActionButtonClickEvent(int buttonId) {
-        this.clickedButtonId = buttonId;
+    public FloatingActionButtonClickEvent(int sortType) {
+        this.sortType = sortType;
     }
 
-    public int getClickedButtonId() {
-        return clickedButtonId;
+    public int getSortType() {
+        return sortType;
     }
 }

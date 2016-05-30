@@ -6,14 +6,17 @@
 
 
     <dimen name="unit_50">50dp</dimen>
+    <dimen name="unit_30">30dp</dimen>
+    <dimen name="unit_20">20dp</dimen>
+    <dimen name="unit_24">24dp</dimen>
+
     <dimen name="unit_5">5dp</dimen>
     <dimen name="unit_88">88dp</dimen>
     <dimen name="unit_10">10dp</dimen>
     <dimen name="unit_2">2dp</dimen>
-    <dimen name="unit_190">88dp</dimen>
-
 
     <dimen name="text_20">20sp</dimen>
+    <dimen name="text_10">10sp</dimen>
     <dimen name="text_15">15sp</dimen>
     <dimen name="text_25">25sp</dimen>
     <dimen name="text_30">30sp</dimen>

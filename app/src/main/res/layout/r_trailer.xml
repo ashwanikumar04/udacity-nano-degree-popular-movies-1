@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/unit_5"
+    card_view:cardCornerRadius="@dimen/unit_5">
+
+    <RelativeLayout
+        android:id="@+id/llWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/row_item_background"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:padding="@dimen/unit_5">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/image_width"
+            tools:src="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_20"
+            android:textStyle="bold"
+            tools:text="Test" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text"
+            android:background="@color/primary"
+            android:gravity="right|top"
+            android:orientation="horizontal"
+            android:padding="@dimen/unit_5">
+
+
+            <ImageButton
+                android:id="@+id/play"
+                style="@style/ImageButton" />
+
+            <ImageButton
+                android:id="@+id/share"
+                style="@style/ImageButton"
+                android:layout_marginRight="0dp" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+

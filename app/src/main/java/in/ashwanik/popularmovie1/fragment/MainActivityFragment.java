@@ -26,13 +26,16 @@ import in.ashwanik.popularmovie1.R;
 import in.ashwanik.popularmovie1.activity.BaseActivity;
 import in.ashwanik.popularmovie1.activity.DetailsActivity;
 import in.ashwanik.popularmovie1.adapters.MoviesAdapter;
+import in.ashwanik.popularmovie1.common.BaseApplication;
 import in.ashwanik.popularmovie1.common.Constants;
 import in.ashwanik.popularmovie1.common.EndlessRecyclerViewScrollListener;
 import in.ashwanik.popularmovie1.entities.Movie;
+import in.ashwanik.popularmovie1.events.FavoriteRemovedEvent;
 import in.ashwanik.popularmovie1.events.FloatingActionButtonClickEvent;
 import in.ashwanik.popularmovie1.interfaces.IActionHandler;
 import in.ashwanik.popularmovie1.interfaces.IClickHandler;
 import in.ashwanik.popularmovie1.response.MovieResponse;
+import in.ashwanik.popularmovie1.utils.Helpers;
 import in.ashwanik.popularmovie1.web.clients.MovieClient;
 import in.ashwanik.retroclient.entities.ErrorData;
 import in.ashwanik.retroclient.interfaces.RequestHandler;
@@ -80,7 +83,6 @@ public class MainActivityFragment extends Fragment {
                         movies.addAll(response.getResults());
                         int curSize = adapter.getItemCount();
                         adapter.notifyItemRangeInserted(curSize, movies.size() - 1);
-
                     }
 
                     @Override
@@ -91,42 +93,72 @@ public class MainActivityFragment extends Fragment {
     }
 
 
-    void initializeRecyclerView() {
+    void initializeRecyclerView(boolean handleScroll) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView
-                .addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
-                    @Override
-                    public void onLoadMore(int page, int totalItemsCount) {
-                        loadDataFromApi(page + 1, null);
-                    }
-                });
+        if (handleScroll) {
+            recyclerView
+                    .addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+                        @Override
+                        public void onLoadMore(int page, int totalItemsCount) {
+                            loadDataFromApi(page + 1, null);
+                        }
+                    });
+        }
     }
 
     private String sortBy;
 
     @Subscribe
+    public void onEvent(FavoriteRemovedEvent event) {
+        int type = Helpers.getIntegerAsPreference(Constants.PREFS_NAME_MAIN, Constants.KEYS_SORT_TYPE, Constants.SortType.SORT_BY_MOST_POPULAR);
+        if (type == Constants.SortType.SORT_BY_FAVORITE_MOVIES) {
+            EventBus.getDefault().post(new FloatingActionButtonClickEvent(type));
+        }
+    }
+
+    @Subscribe
     public void onEvent(FloatingActionButtonClickEvent event) {
         movies.clear();
         adapter = new MoviesAdapter(getActivity(), movies, handler);
-        switch (event.getClickedButtonId()) {
-            case R.id.sortByPopular:
+        switch (event.getSortType()) {
+            case Constants.SortType.SORT_BY_MOST_POPULAR:
                 sortBy = "popularity.desc";
+                fetchData();
                 break;
 
-            case R.id.sortByHighestRated:
+            case Constants.SortType.SORT_BY_HEIGHEST_RATED:
                 sortBy = "vote_average.desc";
+                fetchData();
+                break;
+            case Constants.SortType.SORT_BY_FAVORITE_MOVIES:
+                fetchFavorite();
                 break;
         }
-        fetchData();
+        Helpers.saveIntegerAsPreference(Constants.PREFS_NAME_MAIN, Constants.KEYS_SORT_TYPE, event.getSortType());
+    }
+
+    private void fetchFavorite() {
+        movies.clear();
+        movies = BaseApplication.getInstance().getMovies();
+        adapter = new MoviesAdapter(getActivity(), movies, handler);
+        initializeRecyclerView(false);
+        if (movies.size() == 0) {
+            noData.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noData.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void fetchData() {
         noData.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
-        initializeRecyclerView();
+        initializeRecyclerView(true);
         loadDataFromApi(1, new IActionHandler<List<Movie>>() {
             @Override
             public void handle() {
@@ -191,8 +223,10 @@ public class MainActivityFragment extends Fragment {
         };
         adapter = new MoviesAdapter(this.getActivity(), movies, handler);
         sortBy = "";
-        fetchData();
         EventBus.getDefault().register(this);
+
+        int type = Helpers.getIntegerAsPreference(Constants.PREFS_NAME_MAIN, Constants.KEYS_SORT_TYPE, Constants.SortType.SORT_BY_MOST_POPULAR);
+        EventBus.getDefault().post(new FloatingActionButtonClickEvent(type));
         return view;
     }
 
@@ -201,7 +235,6 @@ public class MainActivityFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-
     }
 
 }

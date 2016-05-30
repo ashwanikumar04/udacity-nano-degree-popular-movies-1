@@ -3,6 +3,7 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,8 +23,59 @@
             android:id="@+id/iv_movie_poster"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:contentDescription="@string/app_name"
             android:scaleType="fitXY"
-            android:contentDescription="@string/app_name" />
+            tools:src="@drawable/placeholder" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/unit_50"
+            android:layout_below="@id/iv_movie_poster"
+            android:background="@color/accent"
+            android:padding="@dimen/unit_5">
+
+            <TextView
+                android:id="@+id/releaseDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/unit_2"
+                android:text="@string/releaseDate"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_10"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/releaseDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/releaseDateLabel"
+                android:layout_toRightOf="@+id/releaseDateLabel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_10"
+                tools:text="Test" />
+
+            <ImageView
+                android:id="@+id/rating"
+                android:layout_width="@dimen/unit_20"
+                android:layout_height="@dimen/unit_20"
+                android:layout_below="@id/releaseDateLabel"
+                android:layout_marginRight="@dimen/unit_2"
+                tools:src="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/voteAverage"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/unit_30"
+                android:layout_below="@id/releaseDateLabel"
+                android:layout_toEndOf="@+id/rating"
+                android:layout_toRightOf="@+id/rating"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_10"
+                android:textStyle="bold"
+                tools:text="10.0/10" />
+
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
 

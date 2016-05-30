@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  CREWCROSS CONFIDENTIAL
+  2016 CREWCROSS INC
+  All Rights Reserved.
+
+  NOTICE:  All information contained herein is, and remains   the property of CREWCROSS INC and
+  its suppliers,  if any.  The intellectual and technical concepts contained   herein are proprietary to
+  CREWCROSS INC  and its suppliers and may be covered by U.S. and Foreign Patents,  patents in
+  process, and are protected by trade secret or copyright law.   Dissemination of this information
+  or reproduction of this material  is strictly forbidden unless prior written permission is obtained
+  from CREWCROSS INC.
+
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <translate
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromYDelta="100%"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toXDelta="0" />
+
+</set>

@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.ashwanik.popularmovie1.R;
+import in.ashwanik.popularmovie1.common.Constants;
 import in.ashwanik.popularmovie1.events.FloatingActionButtonClickEvent;
 
 public class MainActivity extends BaseActivity {
@@ -25,7 +26,7 @@ public class MainActivity extends BaseActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            EventBus.getDefault().post(new FloatingActionButtonClickEvent(v.getId()));
+            EventBus.getDefault().post(new FloatingActionButtonClickEvent((int) v.getTag()));
             floatingActionMenu.close(true);
         }
     };
@@ -35,16 +36,28 @@ public class MainActivity extends BaseActivity {
 
         FloatingActionButton sortByPopular = ButterKnife.findById(floatingActionMenu, R.id.sortByPopular);
         sortByPopular
-                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_favorite_border)
+                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_whatshot)
                         .colorRes(R.color.white)
                         .actionBarSize());
+        sortByPopular.setTag(Constants.SortType.SORT_BY_MOST_POPULAR);
         FloatingActionButton sortByHighestRated = ButterKnife.findById(floatingActionMenu, R.id.sortByHighestRated);
         sortByHighestRated
-                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_star_border)
+                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_star)
                         .colorRes(R.color.white)
                         .actionBarSize());
+
+        sortByHighestRated.setTag(Constants.SortType.SORT_BY_HEIGHEST_RATED);
+
+        FloatingActionButton showFavorite = ButterKnife.findById(floatingActionMenu, R.id.showFavorite);
+        showFavorite
+                .setImageDrawable(new IconDrawable(this, MaterialIcons.md_favorite)
+                        .colorRes(R.color.white)
+                        .actionBarSize());
+        showFavorite.setTag(Constants.SortType.SORT_BY_FAVORITE_MOVIES);
+
         sortByPopular.setOnClickListener(onClickListener);
         sortByHighestRated.setOnClickListener(onClickListener);
+        showFavorite.setOnClickListener(onClickListener);
 
     }
 

@@ -2,18 +2,17 @@ package in.ashwanik.popularmovie1.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 
 import java.util.List;
@@ -22,53 +21,47 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.ashwanik.popularmovie1.R;
 import in.ashwanik.popularmovie1.common.BaseApplication;
-import in.ashwanik.popularmovie1.entities.Movie;
+import in.ashwanik.popularmovie1.entities.Youtube;
 import in.ashwanik.popularmovie1.interfaces.IClickHandler;
+import in.ashwanik.popularmovie1.utils.FontIconHelper;
 import in.ashwanik.popularmovie1.utils.Helpers;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ItemViewHolder> {
+public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ItemViewHolder> {
 
-    List<Movie> arrayList;
-    IClickHandler handler;
+    List<Youtube> arrayList;
     private LayoutInflater inflater;
+    IClickHandler handler;
 
-    public MoviesAdapter(Context context, List<Movie> movies, IClickHandler handler) {
+    public TrailersAdapter(Context context, List<Youtube> trailers, IClickHandler handler) {
         inflater = LayoutInflater.from(context);
+        this.arrayList = trailers;
         this.handler = handler;
-        this.arrayList = movies;
+
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.r_movie, parent, false);
+        View view = inflater.inflate(R.layout.r_trailer, parent, false);
         ItemViewHolder holder = new ItemViewHolder(view);
         holder.setClickHandler(handler);
+
         return holder;
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        Movie movie = arrayList.get(position);
-        holder.moviePoster.setImageResource(R.drawable.placeholder);
-        if (!TextUtils.isEmpty(movie.getFullPosterPath())) {
-            Glide
-                    .with(BaseApplication.getInstance())
-                    .load(movie.getFullPosterPath())
+        Youtube result = arrayList.get(position);
+        holder.image.setImageResource(R.drawable.placeholder);
+        if (!TextUtils.isEmpty(result.getFullPosterPath())) {
+            Glide.with(BaseApplication.getInstance())
+                    .load(result.getFullPosterPath())
                     .placeholder(R.drawable.placeholder)
-                    .into(holder.moviePoster);
+                    .into(holder.image);
         }
-        holder
-                .rating
-                .setImageDrawable(new IconDrawable(BaseApplication.getInstance(), MaterialIcons.md_star)
-                        .colorRes(R.color.white)
-                        .actionBarSize());
-        holder.releaseDate.setText(movie.getReleaseDate());
-        holder.voteAverage.setText(Helpers.roundTwoDecimals(movie.getVoteAverage()) + "/10.0");
-        holder.moviePoster.setContentDescription(movie.getTitle());
-        if (Build.VERSION.SDK_INT >= 21) {
-            holder.moviePoster.setTransitionName("icon_" + position);
-        }
+        holder.text.setText(result.getName());
+        holder.play.setImageDrawable(FontIconHelper.getFontDrawable(BaseApplication.getInstance(), MaterialIcons.md_play_circle_filled));
+        holder.share.setImageDrawable(FontIconHelper.getFontDrawable(BaseApplication.getInstance(), MaterialIcons.md_share));
         Helpers.recyclerAnim(holder.itemView);
     }
 
@@ -78,14 +71,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ItemViewHo
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        @Bind(R.id.iv_movie_poster)
-        ImageView moviePoster;
-        @Bind(R.id.rating)
-        ImageView rating;
-        @Bind(R.id.releaseDate)
-        TextView releaseDate;
-        @Bind(R.id.voteAverage)
-        TextView voteAverage;
+        @Bind(R.id.image)
+        ImageView image;
+        @Bind(R.id.text)
+        TextView text;
+        @Bind(R.id.play)
+        ImageButton play;
+
+        @Bind(R.id.share)
+        ImageButton share;
+
         @Bind(R.id.llWrapper)
         RelativeLayout llWrapper;
         IClickHandler clickHandler;
@@ -95,6 +90,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ItemViewHo
             ButterKnife.bind(this, itemView);
             llWrapper.setOnClickListener(this);
             llWrapper.setOnLongClickListener(this);
+            play.setOnClickListener(this);
+            share.setOnClickListener(this);
         }
 
         public IClickHandler getClickHandler() {
@@ -108,7 +105,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ItemViewHo
         @Override
         public void onClick(View view) {
             if (getClickHandler() != null) {
-                getClickHandler().onItemClicked(view, getLayoutPosition());
+                if (view instanceof ImageButton) {
+                    getClickHandler().onButtonAction(view, getLayoutPosition());
+
+                } else {
+                    getClickHandler().onItemClicked(view, getLayoutPosition());
+                }
             }
         }
 

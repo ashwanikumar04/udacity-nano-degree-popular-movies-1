@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/unit_5"
+    card_view:cardCornerRadius="@dimen/unit_5">
+
+    <RelativeLayout
+        android:id="@+id/llWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/row_item_background"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:padding="@dimen/unit_5">
+
+        <TextView
+            android:id="@+id/authorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/unit_5"
+            android:text="Author:"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/authorLabel"
+            android:layout_toRightOf="@+id/authorLabel"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="Author" />
+
+        <RelativeLayout
+            android:id="@+id/reviewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/authorLabel">
+
+            <TextView
+                android:id="@+id/reviewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/unit_5"
+                android:text="Review:"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/reviewLabel"
+                android:layout_toRightOf="@+id/reviewLabel"
+                android:ellipsize="end"
+                android:lines="10"
+                android:singleLine="false"
+                tools:text="Review" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reviewContainer">
+
+            <TextView
+                android:id="@+id/moreLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/unit_5"
+                android:text="More:"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/moreLabel"
+                android:layout_toRightOf="@+id/moreLabel"
+                android:autoLink="web"
+                android:singleLine="false"
+                tools:text="More" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
