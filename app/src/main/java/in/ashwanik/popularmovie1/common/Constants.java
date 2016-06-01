@@ -5,7 +5,7 @@ package in.ashwanik.popularmovie1.common;
  */
 public class Constants {
 
-    public static String API_KEY = "e94bceabe6c0fd49a455c793de6c4ff5";
+    public static String API_KEY = "<API_KEY>";
 
     public static final String PREFS_NAME_MAIN = "Keys";
     public static final String KEYS_FAVORITES = "Favorites";
